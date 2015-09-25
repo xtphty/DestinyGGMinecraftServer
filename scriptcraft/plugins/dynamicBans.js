@@ -9,9 +9,12 @@ var dynamicBans = null;
 var fileSaveRetries = 2;
 var deathLimit = 3;
 var banDurationRegular = 1;
-var banDurationOnLimit = 99999999;
 var banDurationMillis = MILLIS_IN_MINUTES;
-var banDurationUnit = "minutes";
+var banDurationUnit = "minute(s)";
+
+// Mod state
+var ONJOINEVENT;
+var ONDEATHEVENT;
 
 // References to Bukkit types
 var BkPlayer = org.bukkit.entity.Player;
@@ -93,11 +96,11 @@ function onPlayerDeath(event) {
     var deathStr = playerBanData.deaths + '/' + deathLimit + ' deaths';
     var timeStr =  banDurationRegular + ' ' + banDurationUnit + '.';
     if (playerBanData.deaths >= deathLimit){
-        server.broadcastMessage(playerBanData.name + ' has ' + deathStr + ' deaths, and has been eliminated.');
-        entity.kickPlayer('You have been eliminated after ' + deathStr + ' deaths');
-        playerBanData.dateBanExpires = new Date().getTime() + (banDurationOnLimit * banDurationMillis);
+        server.broadcastMessage(playerBanData.name + ' has ' + deathStr + ', and has been eliminated.');
+        entity.kickPlayer('You have been eliminated after ' + deathStr + '.');
+        playerBanData.eliminated = true;
     } else {
-        server.broadcastMessage(playerBanData.name + ' has ' + deathStr + ' deaths, and will be kicked for ' + timeStr);
+        server.broadcastMessage(playerBanData.name + ' has ' + deathStr + ', and will be kicked for ' + timeStr);
         entity.kickPlayer('You died, respawn in ' + timeStr);
         playerBanData.dateBanExpires = new Date().getTime() + (banDurationRegular * banDurationMillis);
     }
@@ -117,21 +120,6 @@ function onPlayerDeath(event) {
     }
 }
 
-if (loadData()) {
-    console.log('[DynamicBans] Data loaded successfully');
-} else {
-    // If data file does not already exist / fails to load try to create it
-    dynamicBans = {
-        dateCreated: new Date().getTime(),
-        dateLastLoaded: new Date().getTime()
-    };
-
-    if (saveData()) {
-        console.log('[DynamicBans] Data create successfully');
-    } else {
-        console.error('[DynamicBans] [ERROR] dynamicBans.json could not be created, disabling plugin!');
-    }
-}
 
 /**
  * Prevent people from joining if they have hit the death limit
@@ -142,37 +130,70 @@ function onPlayerJoin(event){
         return;
     }
 
-    var entity = event.getEntity();
+    var player = event.getPlayer();
 
     // Make sure entity is a player, for some reason
     // NPCs can also trigger onPlayerDeath
-    if (!(entity instanceof BkPlayer)) {
+    if (!(player instanceof BkPlayer)) {
         return;
     }
 
     if (!dynamicBans) {
-        entity.kickPlayer('Respawn plugin failed, talk to an admin on destiny.gg');
+        player.kickPlayer('Respawn plugin failed, talk to an admin on destiny.gg');
         return;
     }
 
-    var name = entity.getName();
-    var uuid = entity.getUniqueId();
+    var name = player.getName();
+    var uuid = player.getUniqueId();
     var banData = dynamicBans[uuid];
 
-    if (!banData || !banData.dateBanExpires) {
+    if (!banData) {
         // player has no deaths allow join
        return;
     }
 
-    if (banData.dateBanExpires > new Date().getTime()) {
-        entity.kickPlayer('Respawn time remaining: ' + (banData.dateBanExpires / banDurationMillis) + ' ' + banDurationUnit);
+    if (banData.eliminated){
+        player.kickPlayer('You have already died ' + deathLimit + ' times, no respawns left. Get cucked.');
+    }
+
+    if (!banData.dateBanExpires){
+        // No ban expiry set, player is allowed to join
+        return;
+    }
+
+    var diff = banData.dateBanExpires - new Date().getTime();
+    if (diff > 0) {
+        player.kickPlayer('You can respawn in ' + (diff / banDurationMillis) + ' ' + banDurationUnit);
+    }
+    // Ban has expired, allow player to join
+    return;
+}
+
+// Try and load / create data file
+if (loadData()) {
+    console.log('[DynamicBans] Data file dynamicBans.json loaded successfully.');
+} else {
+    // If data file does not already exist / fails to load try to create it
+    dynamicBans = {
+        dateCreated: new Date().getTime(),
+        dateLastLoaded: new Date().getTime()
+    };
+
+    if (saveData()) {
+        console.log('[DynamicBans] Data file dynamicBans.json created successfully.');
     } else {
-        banData.dateBanExpires = false;
+        console.error('[DynamicBans] [ERROR] dynamicBans.json could not be created, disabling plugin!');
     }
 }
 
 // Only attach events if persistence is active
 if (dynamicBans) {
-    events.playerDeath(onPlayerDeath);
-    events.playerLogin(onPlayerLogin);
+    if (ONDEATHEVENT && ONDEATHEVENT.unregister){
+        ONDEATHEVENT.unregister();
+    }
+    if (ONJOINEVENT && ONJOINEVENT.unregister){
+        ONJOINEVENT.unregister();
+    }
+    ONDEATHEVENT = events.playerDeath(onPlayerDeath);
+    ONJOINEVENT = events.playerJoin(onPlayerJoin);
 }
