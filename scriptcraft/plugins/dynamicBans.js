@@ -32,6 +32,7 @@ function saveData() {
         // Invalidate after bad save and print error
         dynamicBans = null;
         console.error('[DynamicBans] [ERROR] dynamicBans.json save failed!');
+        console.error(err.stack);
         return false;
     }
 }
@@ -75,7 +76,7 @@ function onPlayerDeath(event) {
         return;
     }
 
-    var uuid = entity.getUniqueId();
+    var uuid = 'uuid_' + entity.getUniqueId().toString();
     var retries = 0;
     var saved = false;
 
@@ -144,7 +145,7 @@ function onPlayerJoin(event){
     }
 
     var name = player.getName();
-    var uuid = player.getUniqueId();
+    var uuid = 'uuid_' + player.getUniqueId().toString();
     var banData = dynamicBans[uuid];
 
     if (!banData) {
