@@ -76,7 +76,7 @@ function onPlayerDeath(event) {
         return;
     }
 
-    var uuid = 'uuid_' + entity.getUniqueId().toString();
+    var uuid = entity.getUniqueId().toString();
     var retries = 0;
     var saved = false;
 
@@ -145,7 +145,7 @@ function onPlayerJoin(event){
     }
 
     var name = player.getName();
-    var uuid = 'uuid_' + player.getUniqueId().toString();
+    var uuid = player.getUniqueId().toString();
     var banData = dynamicBans[uuid];
 
     if (!banData) {
