@@ -1,0 +1,38 @@
+groups:
+  Newcomer:
+    default: false
+    permissions:
+    - essentials.rules
+    inheritance: []
+    info:
+      prefix: '&7[Newcomer] '
+      build: false
+      suffix: ''
+  Member:
+    default: true
+    permissions:
+    - mcmmo.commands.defaults
+    - simpleclans.leader.create
+    - simpleclans.leader.disband
+    - simpleclans.leader.invite
+    - simpleclans.leader.kick
+    - simpleclans.leader.modtag
+    inheritance:
+    - Newcomer
+    info:
+      prefix: '&f'
+      build: true
+      suffix: ''
+  Admin:
+    default: false
+    permissions:
+    - essentials.*
+    - chatcolor.*
+    - NameColor.*
+    - mcmmo.commands.defaultsop
+    inheritance:
+    - Member
+    info:
+      prefix: '&b[&f'
+      build: true
+      suffix: '&b]'
