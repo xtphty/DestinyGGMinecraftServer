@@ -1,20 +1,16 @@
 'use strict';
 
 // Utility globals
-var MILLIS_IN_MINUTES = 1000*60;
-var MILLIS_IN_HOURS = 1000*60*60;
+var MILLIS_IN_MINUTES = 1000 * 60;
+var MILLIS_IN_HOURS = 1000 * 60 * 60;
 
 // Mod parameters
 var dynamicBans = null;
 var fileSaveRetries = 2;
 var deathLimit = 3;
-var banDurationRegular = 1;
+var banDurationRegular = 0.25;
 var banDurationMillis = MILLIS_IN_MINUTES;
 var banDurationUnit = "minute(s)";
-
-// Mod state
-var ONJOINEVENT;
-var ONDEATHEVENT;
 
 // References to Bukkit types
 var BkPlayer = org.bukkit.entity.Player;
@@ -95,16 +91,21 @@ function onPlayerDeath(event) {
     // Calculate ban length and print messages to user / server
     var playerBanData = dynamicBans[uuid];
     var deathStr = playerBanData.deaths + '/' + deathLimit + ' deaths';
-    var timeStr =  banDurationRegular + ' ' + banDurationUnit + '.';
-    if (playerBanData.deaths >= deathLimit){
-        server.broadcastMessage(playerBanData.name + ' has ' + deathStr + ', and has been eliminated.');
-        entity.kickPlayer('You have been eliminated after ' + deathStr + '.');
-        playerBanData.eliminated = true;
-    } else {
-        server.broadcastMessage(playerBanData.name + ' has ' + deathStr + ', and will be kicked for ' + timeStr);
-        entity.kickPlayer('You died, respawn in ' + timeStr);
-        playerBanData.dateBanExpires = new Date().getTime() + (banDurationRegular * banDurationMillis);
-    }
+    var timeStr = banDurationRegular + ' ' + banDurationUnit + '.';
+
+    // Only kick player on the next tick to allow normal death processing to complete
+    setTimeout(function () {
+        if (playerBanData.deaths >= deathLimit) {
+            server.broadcastMessage(playerBanData.name + ' has ' + deathStr + ', and has been eliminated.');
+            entity.kickPlayer('You have been eliminated after ' + deathStr + '.');
+            playerBanData.eliminated = true;
+        } else {
+            server.broadcastMessage(playerBanData.name + ' has ' + deathStr + ', and will be kicked for ' + timeStr);
+            entity.kickPlayer('You died, respawn in ' + timeStr);
+            playerBanData.dateBanExpires = new Date().getTime() + (banDurationRegular * banDurationMillis);
+        }
+    }, 1);
+
 
     // Try and save ban data to file
     while (retries < fileSaveRetries) {
@@ -126,7 +127,7 @@ function onPlayerDeath(event) {
  * Prevent people from joining if they have hit the death limit
  * @param event the join event
  */
-function onPlayerJoin(event){
+function onPlayerJoin(event) {
     if (isPeacePeriod()) {
         return;
     }
@@ -150,14 +151,14 @@ function onPlayerJoin(event){
 
     if (!banData) {
         // player has no deaths allow join
-       return;
+        return;
     }
 
-    if (banData.eliminated){
+    if (banData.eliminated) {
         player.kickPlayer('You have already died ' + deathLimit + ' times, no respawns left. Get cucked.');
     }
 
-    if (!banData.dateBanExpires){
+    if (!banData.dateBanExpires) {
         // No ban expiry set, player is allowed to join
         return;
     }
@@ -189,12 +190,6 @@ if (loadData()) {
 
 // Only attach events if persistence is active
 if (dynamicBans) {
-    if (ONDEATHEVENT && ONDEATHEVENT.unregister){
-        ONDEATHEVENT.unregister();
-    }
-    if (ONJOINEVENT && ONJOINEVENT.unregister){
-        ONJOINEVENT.unregister();
-    }
-    ONDEATHEVENT = events.playerDeath(onPlayerDeath);
-    ONJOINEVENT = events.playerJoin(onPlayerJoin);
+    events.playerDeath(onPlayerDeath);
+    events.playerJoin(onPlayerJoin);
 }
