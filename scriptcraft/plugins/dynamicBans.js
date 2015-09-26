@@ -149,6 +149,10 @@ function onPlayerJoin(event) {
     var uuid = player.getUniqueId().toString();
     var banData = dynamicBans[uuid];
 
+    if (name.toLowerCase().indexOf('mouton') >= 0){
+        player.chat('I\'m Mr. Mouton, look at me!');
+    }
+
     if (!banData) {
         // player has no deaths allow join
         return;
