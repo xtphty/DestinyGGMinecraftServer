@@ -1,0 +1,28 @@
+groups:
+  default:
+    options:
+      rank: '1000'
+      default: true
+    permissions:
+    - simpleclans.anyone.list
+    - simpleclans.member.accept
+    - simpleclans.member.can-join
+    - simpleclans.member.deny
+    - simpleclans.member.kills
+    - simpleclans.member.profile
+    - simpleclans.member.roster
+    - simpleclans.member.stats
+    - simpleclans.leader.create
+    - simpleclans.leader.invite
+    - simpleclans.leader.modtag
+    - simpleclans.mod.verify
+    - simpleclans.leader.kick     #Remove upon start of server
+    - simpleclans.member.resign   #Remove upon start of server
+  Admin:
+    permissions:
+    - bukkit.*
+    - scriptcraft.*
+    - simpleclans.*
+    options:
+      rank: '1'
+schema-version: 1

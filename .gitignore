@@ -14,13 +14,28 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# scriptcraft
+# scriptcraft output dir
 scriptcraft/*
+
+## required scriptcraft scripts
+# each sub-directory has to be un-ignored first
+# then ignore its content except the config
+# files needed
+!scriptcraft/plugins/
+scriptcraft/plugins/*
 !scriptcraft/plugins/dynamicBans.js
 
-# mc server
+# MC server generated files
 logs/*
 plugins/*
 world*
 *.json
 eula.txt
+
+## required plugin files
+# each sub-directory has to be un-ignored first
+# then ignore its content except the config
+# files needed
+!plugins/PermissionsEx/
+plugins/PermissionsEx/*
+!plugins/PermissionsEx/permissions.yml
