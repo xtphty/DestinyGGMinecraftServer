@@ -1,24 +1,21 @@
 'use strict';
 
 // Utility globals
+// Use this for <banDurationMillis> to ban for <banDurationRegular> MINUTES
 var MILLIS_IN_MINUTES = 1000 * 60;
+// Use this for <banDurationMillis> to ban for <banDurationRegular> HOURS
 var MILLIS_IN_HOURS = 1000 * 60 * 60;
 
 // Mod parameters
 var dynamicBans = null;
 var fileSaveRetries = 2;
-var deathLimit = 3;
-var banDurationRegular = 0.25;
-var banDurationMillis = MILLIS_IN_MINUTES;
-var banDurationUnit = "minute(s)";
+var deathLimit = 3; // Number of deaths before perm ban
+var banDurationRegular = 0.25; // Ban duration for a death
+var banDurationMillis = MILLIS_IN_MINUTES; // Dictates Unit of ban duration
+var banDurationUnit = "minute(s)"; // Textual representation of ban duration unit
 
 // References to Bukkit types
 var BkPlayer = org.bukkit.entity.Player;
-
-function isPeacePeriod() {
-    // TODO manually or dynamically set peace period
-    return false;
-}
 
 function saveData() {
     try {
@@ -51,9 +48,6 @@ function loadData() {
  * @param event the death event
  */
 function onPlayerDeath(event) {
-    if (isPeacePeriod()) {
-        return;
-    }
 
     var entity = event.getEntity();
 
@@ -128,9 +122,6 @@ function onPlayerDeath(event) {
  * @param event the join event
  */
 function onPlayerJoin(event) {
-    if (isPeacePeriod()) {
-        return;
-    }
 
     var player = event.getPlayer();
 
@@ -149,7 +140,7 @@ function onPlayerJoin(event) {
     var uuid = player.getUniqueId().toString();
     var banData = dynamicBans[uuid];
 
-    if (name.toLowerCase().indexOf('mouton') >= 0){
+    if (name.toLowerCase().indexOf('mouton') >= 0) {
         player.chat('I\'m Mr. Mouton, look at me!');
     }
 
