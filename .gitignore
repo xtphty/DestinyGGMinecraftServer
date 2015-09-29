@@ -39,3 +39,11 @@ eula.txt
 !plugins/PermissionsEx/
 plugins/PermissionsEx/*
 !plugins/PermissionsEx/permissions.yml
+
+!plugins/NoobProtector/
+plugins/NoobProtector/*
+!plugins/NoobProtector/config.yml
+
+!plugins/SimpleClans/
+plugins/SimpleClans/*
+!plugins/SimpleClans/config.yml
