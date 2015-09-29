@@ -7,4 +7,4 @@
 - [ScriptCraft](https://github.com/walterhiggins/ScriptCraft) - Allows for some simple JavaScript based mods 
   - dynamicBans.js - Dynamically bans users based on death count. [see script comments for config details](https://github.com/xtphty/DestinyGGMinecraftServer/blob/master/scriptcraft/plugins/dynamicBans.js).    
     - After you change the js file reload the scriptcraft plugins using `/js refresh()`
-    - To clear active bans / deathcounts delete the file `dynamicBans.json` in server root.
+    - To clear active bans / deathcounts delete the file `dynamicBans.json` in server root, and reload scriptcraft using the command above.
