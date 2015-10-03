@@ -9,8 +9,8 @@ var MILLIS_IN_HOURS = 1000 * 60 * 60;
 // Mod parameters
 var dynamicBans = null;
 var fileSaveRetries = 2;
-var deathLimit = 3; // Number of deaths before perm ban
-var banDurationRegular = 0.25; // Ban duration for a death
+var deathLimit = 2; // Number of deaths before perm ban
+var banDurationRegular = 10; // Ban duration for a death
 var banDurationMillis = MILLIS_IN_MINUTES; // Dictates Unit of ban duration
 var banDurationUnit = "minute(s)"; // Textual representation of ban duration unit
 
@@ -142,6 +142,10 @@ function onPlayerJoin(event) {
 
     if (name.toLowerCase().indexOf('mouton') >= 0) {
         player.chat('I\'m Mr. Mouton, look at me!');
+    }
+
+    if (name.toLowerCase().indexOf('showmewhat') >= 0) {
+        player.chat('Get Schwifty!');
     }
 
     if (!banData) {
