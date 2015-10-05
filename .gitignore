@@ -47,3 +47,7 @@ plugins/NoobProtector/*
 !plugins/SimpleClans/
 plugins/SimpleClans/*
 !plugins/SimpleClans/config.yml
+
+!plugins/HardcoreTeamPvP/
+plugins/HardcoreTeamPvP/*
+!plugins/HardcoreTeamPvP/config.yml

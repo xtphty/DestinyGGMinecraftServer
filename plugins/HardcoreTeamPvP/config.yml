@@ -1,14 +1,16 @@
 safe-civilians: false
 tag:
-  default-color: '9'
+  default-color: '8'
   max-length: 5
   bracket:
     color: '8'
+    leader-color: '4'
     left: ''
     right: ''
   min-length: 2
   separator:
     color: '8'
+    leader-color: '4'
     char: ' .'
 settings:
   disable-messages: false
@@ -21,9 +23,9 @@ settings:
   show-debug-info: false
   mchat-integration: true
   enable-auto-groups: false
-  chat-compatibility-mode: false
+  chat-compatibility-mode: true
   rival-limit-percent: 50
-  use-colorcode-from-prefix-for-name: false
+  use-colorcode-from-prefix-for-name: true
   display-chat-tags: true
   unrivable-clans:
   - admin
@@ -54,6 +56,7 @@ commands:
   accept: accept
   deny: deny
   global: global
+  force-priority: true
 economy:
   creation-price: 100.0
   purchase-clan-create: false
@@ -90,7 +93,7 @@ page:
   trusted-color: f
   leader-color: '4'
   separator: '-'
-  size: 13
+  size: 100
 clanchat:
   rank:
     color: e
@@ -109,6 +112,7 @@ clanchat:
 request:
   message-color: b
   ask-frequency-secs: 60
+  max-asks-per-request: 1440
 bb:
   color: e
   accent-color: '8'
@@ -140,43 +144,6 @@ permissions:
   auto-group-groupname: true
   YourClanNameHere:
   - test.permission
-  weow: []
-  lam: []
-  pepe: []
-  frkz: []
-  hackr: []
-  sosad: []
-  fag: []
-  ngk: []
-  dicks: []
-  eee: []
-  cia: []
-  wow: []
-  didog: []
-  pcbro: []
-  look: []
-  cjia: []
-  solo: []
-  futa: []
-  yee: []
-  gods: []
-  tsm: []
-  pedo: []
-  lar: []
-  dream: []
-  phd: []
-  larz: []
-  lul: []
-  ouo: []
-  bern: []
-  edge: []
-  loli: []
-  fags: []
-  cuckz: []
-  chekz: []
-  ayyy: []
-  nate: []
-  lock: []
 performance:
   use-threads: false
   use-bungeecord: false
